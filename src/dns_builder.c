@@ -9,11 +9,11 @@ DNS_HEADER dns_header_init(uint16_t id, uint8_t rd, uint16_t qdcount) {
     s_header.flags.opcode = 0;  
     s_header.flags.aa     = 0;  
     s_header.flags.tc     = 0;
-    s_header.flags.rd     = rd;      // normalmente 1
+    s_header.flags.rd     = rd;      // usually 1
     s_header.flags.ra     = 0;  
     s_header.flags.z      = 0;  
     s_header.flags.rcode  = 0;  
-    s_header.qdcount      = qdcount; // normalmente 1
+    s_header.qdcount      = qdcount; // usually 1
     s_header.ancount      = 0;       
     s_header.nscount      = 0;
     s_header.arcount      = 0;
@@ -21,7 +21,7 @@ DNS_HEADER dns_header_init(uint16_t id, uint8_t rd, uint16_t qdcount) {
     return s_header;
 }
 
-void dns_header_serialize(unsigned char *header, DNS_HEADER s_header) {
+int dns_header_serialize(unsigned char *header, DNS_HEADER s_header) {
 
     header[0] = (s_header.id >> 8)       & 0b11111111;
     header[1] = (s_header.id)            & 0b11111111; 
@@ -47,19 +47,21 @@ void dns_header_serialize(unsigned char *header, DNS_HEADER s_header) {
 
     header[10] = (s_header.arcount >> 8) & 0b11111111;
     header[11] = (s_header.arcount)      & 0b11111111;
+
+    return 12;
 }
 
 DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype) {
 
     DNS_QUESTION s_question = {0};
     
-    s_question.qclass = qclass; // normalmente 1
-    s_question.qtype  = qtype;  // normalmente 1
+    s_question.qclass = qclass; // usually 1
+    s_question.qtype  = qtype;  // usually 1
 
     return s_question;
 }
 
-void dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question) {
+int dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question) {
 
     int pos = 0;
     int label_len = 0;
@@ -78,10 +80,21 @@ void dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_
     question[label_pos] = label_len;
     question[pos++] = 0;
 
+    question[pos++] = (s_question.qtype >> 8)  & 0b11111111;
+    question[pos++] = (s_question.qtype)       & 0b11111111;
+
     question[pos++] = (s_question.qclass >> 8) & 0b11111111;
     question[pos++] = (s_question.qclass)      & 0b11111111;
 
-    question[pos++] = (s_question.qtype >> 8)  & 0b11111111;
-    question[pos++] = (s_question.qtype)       & 0b11111111;
+    int question_size = pos;
+    
+    return question_size;
+}
+
+/* Merge Header and Question */
+void dns_build_query(unsigned char *query, unsigned char *header, int header_size, unsigned char *question, int question_size) {
+
+    memcpy(query, header, header_size);
+    memcpy(query + header_size, question, question_size);
 }
 

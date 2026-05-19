@@ -33,10 +33,12 @@ typedef struct {
 
 DNS_HEADER dns_header_init(uint16_t id, uint8_t rd, uint16_t qdcount);
 
-void dns_header_serialize(unsigned char *header, DNS_HEADER s_header);
+int dns_header_serialize(unsigned char *header, DNS_HEADER s_header);
 
 DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype);
 
-void dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question);
+int dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question);
+
+void dns_build_query(unsigned char *query, unsigned char *header, int header_size, unsigned char *question, int question_size);
 
 #endif
