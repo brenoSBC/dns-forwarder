@@ -1,5 +1,9 @@
-#include "../include/dns_builder.h"
+#include "../include/header.h"
+#include "../include/question.h"
+#include "../include/query.h"
 
+#include <stdio.h>
+#include <string.h>
 
 int main() {
 
@@ -26,7 +30,7 @@ int main() {
     printf("query size: %d", query_size);
 
     for (int i = 0; i < query_size; i++) {
-        printf("header[%d] = 0b%08b\n", i, query[i]);
+        printf("header = 0b%08b\n");
     }
     return 0;
 }
