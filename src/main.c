@@ -2,35 +2,60 @@
 #include "../include/question.h"
 #include "../include/query.h"
 
+#include "../include/udp_server.h"
+
 #include <stdio.h>
 #include <string.h>
 
 int main() {
 
-    //testando apenas
 
-    unsigned char header[12];
-    unsigned char question[1024];
-    unsigned char domain[] = "www.google.com";
+    int sockfd = create_udp_socket();
+
+    bind_udp_socket(sockfd, "127.0.0.1");
 
     unsigned char query[1024];
 
-    DNS_HEADER s_header = dns_header_init(123, 1, 1);
+    while(1) {
 
-    int header_size = dns_header_serialize(header, s_header);
+        struct sockaddr_in client_addr;
 
-    DNS_QUESTION s_question = dns_question_init(1, 1);
+        int received = recv_udp_packet(sockfd, query, sizeof(query), &client_addr);
 
-    int question_size = dns_question_serialize(question, domain, s_question);
-
-    dns_build_query(query, header, header_size, question, question_size);
-
-    int query_size = header_size + question_size;
-
-    printf("query size: %d", query_size);
-
-    for (int i = 0; i < query_size; i++) {
-        printf("header = 0b%08b\n");
+        printf("Recebi %d bytes\n",received);
     }
+
+
+
+
+
+
+
+
+    //testando apenas
+
+    // unsigned char header[12];
+    // unsigned char question[1024];
+    // unsigned char domain[] = "www.google.com";
+
+    // unsigned char query[1024];
+
+    // DNS_HEADER s_header = dns_header_init(123, 1, 1);
+
+    // int header_size = dns_header_serialize(header, s_header);
+
+    // DNS_QUESTION s_question = dns_question_init(1, 1);
+
+    // int question_size = dns_question_serialize(question, domain, s_question);
+
+    // dns_build_query(query, header, header_size, question, question_size);
+
+    // int query_size = header_size + question_size;
+
+    // printf("query size: %d", query_size);
+
+    // for (int i = 0; i < query_size; i++) {
+    //     printf("header = 0b%08b\n");
+    // }
     return 0;
 }
