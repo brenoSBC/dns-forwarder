@@ -1,5 +1,31 @@
 #include "../../include/question.h"
 
+DNS_QUESTION dns_question_deserialize(unsigned char *buffer) {
+
+    DNS_QUESTION q = {0};
+
+    int pos = 12;
+    int name_pos = 0;
+
+    while(buffer[pos] != 0b00000000) {
+
+        int label_size = buffer[pos++];
+
+        for(int i = 0; i < label_size; i++) {
+            q.qname[name_pos++] = buffer[pos++];
+        }
+        q.qname[name_pos++] = '.';
+    }
+    pos++;
+
+    q.qtype  = (buffer[pos] << 8) | buffer[pos+1];
+    pos+=2;
+    q.qclass = (buffer[pos] << 8) | buffer[pos+1];
+    pos+=2;
+
+    return q;
+}
+
 DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype) {
 
     DNS_QUESTION s_question = {0};

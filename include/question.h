@@ -4,9 +4,12 @@
 #include <inttypes.h>
 
 typedef struct {
+    char qname[512];
     uint16_t qclass;
     uint16_t qtype;
 } DNS_QUESTION;
+
+DNS_QUESTION dns_question_deserialize(unsigned char *buffer);
 
 DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype);
 

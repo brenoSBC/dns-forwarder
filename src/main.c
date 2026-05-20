@@ -16,14 +16,21 @@ int main() {
 
     unsigned char query[1024];
 
-    while(1) {
+    // while(1) {
 
         struct sockaddr_in client_addr;
 
         int received = recv_udp_packet(sockfd, query, sizeof(query), &client_addr);
 
+        DNS_HEADER h = dns_header_deserialize(query);
+        DNS_QUESTION q = dns_question_deserialize(query);
+
         printf("Recebi %d bytes\n",received);
-    }
+
+        printf("\nQuestion: %s", q.qname);
+
+ 
+    // }
 
 
 

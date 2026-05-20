@@ -29,11 +29,11 @@ void bind_udp_socket(int sockfd, const char *ip) {
     }
 }
 
-int recv_udp_packet(int sockfd, unsigned char *query, int query_size, struct sockaddr_in *client_addr) {
+int recv_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct sockaddr_in *client_addr) {
     
     socklen_t client_len = sizeof(*client_addr);
 
-    int recv = recvfrom(sockfd, query, query_size, 0, (struct sockaddr *)client_addr, &client_len);
+    int recv = recvfrom(sockfd, buffer, buffer_size, 0, (struct sockaddr *)client_addr, &client_len);
 
     if(recv < 0) {
         perror("recvfrom");

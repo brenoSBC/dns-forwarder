@@ -15,6 +15,6 @@ int create_udp_socket();
 
 void bind_udp_socket(int sockfd, const char *ip);
 
-int recv_udp_packet(int sockfd, unsigned char *query, int query_size, struct sockaddr_in *client_addr);
+int recv_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct sockaddr_in *client_addr);
 
 #endif

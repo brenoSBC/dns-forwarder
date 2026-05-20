@@ -23,9 +23,10 @@ typedef struct {
     uint16_t arcount;
 } DNS_HEADER;
 
-
-DNS_HEADER dns_header_init(uint16_t id, uint8_t rd, uint16_t qdcount);
+DNS_HEADER dns_header_deserialize(unsigned char *buffer);
 
 int dns_header_serialize(unsigned char *header, DNS_HEADER s_header);
+
+void dns_header_normalize(DNS_HEADER *h);
 
 #endif
