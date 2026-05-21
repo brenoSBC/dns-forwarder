@@ -11,8 +11,6 @@ typedef struct {
 
 DNS_QUESTION dns_question_deserialize(unsigned char *buffer);
 
-DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype);
-
-int dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question);
+int dns_question_serialize(unsigned char *buffer, unsigned char *domain, DNS_QUESTION q);
 
 #endif

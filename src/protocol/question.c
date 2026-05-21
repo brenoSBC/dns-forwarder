@@ -5,17 +5,18 @@ DNS_QUESTION dns_question_deserialize(unsigned char *buffer) {
     DNS_QUESTION q = {0};
 
     int pos = 12;
-    int name_pos = 0;
+    int domain_pos = 0;
 
     while(buffer[pos] != 0b00000000) {
 
         int label_size = buffer[pos++];
 
         for(int i = 0; i < label_size; i++) {
-            q.qname[name_pos++] = buffer[pos++];
+            q.qname[domain_pos++] = buffer[pos++];
         }
-        q.qname[name_pos++] = '.';
+        q.qname[domain_pos++] = '.';
     }
+    q.qname[domain_pos - 1] = '\0';
     pos++;
 
     q.qtype  = (buffer[pos] << 8) | buffer[pos+1];
@@ -26,17 +27,7 @@ DNS_QUESTION dns_question_deserialize(unsigned char *buffer) {
     return q;
 }
 
-DNS_QUESTION dns_question_init(uint16_t qclass, uint16_t qtype) {
-
-    DNS_QUESTION s_question = {0};
-    
-    s_question.qclass = qclass; // usually 1
-    s_question.qtype  = qtype;  // usually 1
-
-    return s_question;
-}
-
-int dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_QUESTION s_question) {
+int dns_question_serialize(unsigned char *buffer, unsigned char *domain, DNS_QUESTION q) {
 
     int pos = 0;
     int label_len = 0;
@@ -44,24 +35,24 @@ int dns_question_serialize(unsigned char *question, unsigned char *domain, DNS_Q
 
     for(int i = 0; domain[i] != '\0'; i++) {
         if(domain[i] == '.') {
-            question[label_pos] = label_len;
+            buffer[label_pos] = label_len;
             label_len = 0;
             label_pos = pos++;
         } else {
-            question[pos++] = domain[i];
+            buffer[pos++] = domain[i];
             label_len++;
         }
     }
-    question[label_pos] = label_len;
-    question[pos++] = 0;
+    buffer[label_pos] = label_len;
+    buffer[pos++] = 0;
 
-    question[pos++] = (s_question.qtype >> 8)  & 0b11111111;
-    question[pos++] = (s_question.qtype)       & 0b11111111;
+    buffer[pos++] = (q.qtype >> 8)  & 0b11111111;
+    buffer[pos++] = (q.qtype)       & 0b11111111;
 
-    question[pos++] = (s_question.qclass >> 8) & 0b11111111;
-    question[pos++] = (s_question.qclass)      & 0b11111111;
+    buffer[pos++] = (q.qclass >> 8) & 0b11111111;
+    buffer[pos++] = (q.qclass)      & 0b11111111;
 
-    int question_size = pos;
+    int buffer_size = pos;
     
-    return question_size;
+    return buffer_size;
 }

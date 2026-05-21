@@ -25,7 +25,7 @@ typedef struct {
 
 DNS_HEADER dns_header_deserialize(unsigned char *buffer);
 
-int dns_header_serialize(unsigned char *header, DNS_HEADER s_header);
+int dns_header_serialize(unsigned char *buffer, DNS_HEADER h);
 
 void dns_header_normalize(DNS_HEADER *h);
 

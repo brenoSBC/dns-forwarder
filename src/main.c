@@ -16,30 +16,36 @@ int main() {
 
     unsigned char query[1024];
 
-    // while(1) {
+    struct sockaddr_in client_addr;
 
-        struct sockaddr_in client_addr;
+    int received = recv_udp_packet(sockfd, query, sizeof(query), &client_addr);
 
-        int received = recv_udp_packet(sockfd, query, sizeof(query), &client_addr);
+    DNS_HEADER h = dns_header_deserialize(query);
+    DNS_QUESTION q = dns_question_deserialize(query);
 
-        DNS_HEADER h = dns_header_deserialize(query);
-        DNS_QUESTION q = dns_question_deserialize(query);
+    dns_header_normalize(&h);
 
-        printf("Recebi %d bytes\n",received);
+    unsigned char header[12];
+    int header_size = dns_header_serialize(header, h);
 
-        printf("\nQuestion: %s", q.qname);
+    unsigned char question[1024];
+    int question_size = dns_question_serialize(question, q.qname, q);
+
+    int query_size = question_size + header_size;
+    
+    unsigned char new_query[512];
+    dns_build_query(new_query, header, header_size, question, question_size);
+
+   for (int i = 0; i < query_size; i++) {
+        printf("query = 0b%08b\n", new_query[i]);
+    }
+
+
+    printf("Recebi %d bytes\n",received);
+    printf("\nQuestion: %s", q.qname);
 
  
-    // }
-
-
-
-
-
-
-
-
-    //testando apenas
+     //testando apenas
 
     // unsigned char header[12];
     // unsigned char question[1024];
@@ -64,5 +70,6 @@ int main() {
     // for (int i = 0; i < query_size; i++) {
     //     printf("header = 0b%08b\n");
     // }
+
     return 0;
 }

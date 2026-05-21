@@ -24,32 +24,32 @@ DNS_HEADER dns_header_deserialize(unsigned char *buffer) {
     return h;
 }
 
-int dns_header_serialize(unsigned char *header, DNS_HEADER s_header) {
+int dns_header_serialize(unsigned char *buffer, DNS_HEADER h) {
 
-    header[0] = (s_header.id >> 8)       & 0b11111111;
-    header[1] = (s_header.id)            & 0b11111111; 
+    buffer[0] = (h.id >> 8)       & 0b11111111;
+    buffer[1] = (h.id)            & 0b11111111; 
 
-    header[2] = ((s_header.flags.qr     & 0b1)    << 7) |
-                ((s_header.flags.opcode & 0b1111) << 3) |
-                ((s_header.flags.aa     & 0b1)    << 2) |
-                ((s_header.flags.tc     & 0b1)    << 1) |
-                ((s_header.flags.rd     & 0b1)    << 0);
+    buffer[2] = ((h.flags.qr     & 0b1)    << 7) |
+                ((h.flags.opcode & 0b1111) << 3) |
+                ((h.flags.aa     & 0b1)    << 2) |
+                ((h.flags.tc     & 0b1)    << 1) |
+                ((h.flags.rd     & 0b1)    << 0);
 
-    header[3] = ((s_header.flags.ra    & 0b1)    << 7) |
-                ((s_header.flags.z     & 0b111)  << 4) |
-                ((s_header.flags.rcode & 0b1111));
+    buffer[3] = ((h.flags.ra    & 0b1)    << 7) |
+                ((h.flags.z     & 0b111)  << 4) |
+                ((h.flags.rcode & 0b1111));
 
-    header[4] = (s_header.qdcount >> 8)  & 0b11111111;
-    header[5] = (s_header.qdcount)       & 0b11111111;
+    buffer[4] = (h.qdcount >> 8)  & 0b11111111;
+    buffer[5] = (h.qdcount)       & 0b11111111;
 
-    header[6] = (s_header.ancount >> 8)  & 0b11111111;
-    header[7] = (s_header.ancount)       & 0b11111111;
+    buffer[6] = (h.ancount >> 8)  & 0b11111111;
+    buffer[7] = (h.ancount)       & 0b11111111;
     
-    header[8] = (s_header.nscount >> 8)  & 0b11111111;
-    header[9] = (s_header.nscount)       & 0b11111111;
+    buffer[8] = (h.nscount >> 8)  & 0b11111111;
+    buffer[9] = (h.nscount)       & 0b11111111;
 
-    header[10] = (s_header.arcount >> 8) & 0b11111111;
-    header[11] = (s_header.arcount)      & 0b11111111;
+    buffer[10] = (h.arcount >> 8) & 0b11111111;
+    buffer[11] = (h.arcount)      & 0b11111111;
 
     return 12;
 }

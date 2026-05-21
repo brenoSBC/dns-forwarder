@@ -3,6 +3,6 @@
 
 #include <string.h>
 
-void dns_build_query(unsigned char *query, unsigned char *header, int header_size, unsigned char *question, int question_size);
+void dns_build_query(unsigned char *buffer, unsigned char *header, int header_size, unsigned char *question, int question_size);
 
 #endif
