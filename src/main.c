@@ -7,6 +7,12 @@
 #include <stdio.h>
 #include <string.h>
 
+const unsigned char **dns_servers = {
+    "8.8.8.8",
+    "1.1.1.1"
+};
+
+
 int main() {
 
 
