@@ -1,6 +1,6 @@
 #include "../../include/udp_server.h"
 
-int create_udp_socket() {
+int create_server_socket() {
 
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     

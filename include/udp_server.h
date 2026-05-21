@@ -11,7 +11,7 @@
 
 #define PORT 8053
 
-int create_udp_socket();
+int create_server_socket();
 
 void bind_udp_socket(int sockfd, const char *ip);
 

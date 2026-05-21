@@ -9,9 +9,13 @@
 #include <sys/time.h>
 #include <errno.h>
 
-#define PORT 53
+#define SERVER_PORT 53
 #define BUFFSIZE 1024
 
-void send_dns_query(int sockfd, const unsigned char *buffer, int buffer_size, const char *ip);
+int create_client_socket();
+
+void send_dns_query(int sockfd, const unsigned char *buffer, int buffer_size, char *ip);
+
+int recv_dns_answer(int sockfd, unsigned char *buffer);
 
 #endif

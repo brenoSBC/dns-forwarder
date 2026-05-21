@@ -3,11 +3,12 @@
 #include "../include/query.h"
 
 #include "../include/udp_server.h"
+#include "../include/udp_client.h"
 
 #include <stdio.h>
 #include <string.h>
 
-const unsigned char **dns_servers = {
+unsigned char *dns_servers[] = {
     "8.8.8.8",
     "1.1.1.1"
 };
@@ -16,15 +17,15 @@ const unsigned char **dns_servers = {
 int main() {
 
 
-    int sockfd = create_udp_socket();
+    int sock_server = create_server_socket();
 
-    bind_udp_socket(sockfd, "127.0.0.1");
+    bind_udp_socket(sock_server, "127.0.0.1");
 
     unsigned char query[1024];
 
     struct sockaddr_in client_addr;
 
-    int received = recv_udp_packet(sockfd, query, sizeof(query), &client_addr);
+    int received = recv_udp_packet(sock_server, query, sizeof(query), &client_addr);
 
     DNS_HEADER h = dns_header_deserialize(query);
     DNS_QUESTION q = dns_question_deserialize(query);
@@ -47,10 +48,28 @@ int main() {
     }
 
 
-    printf("Recebi %d bytes\n",received);
-    printf("\nQuestion: %s", q.qname);
+    // printf("Recebi %d bytes\n",received);
+    // printf("\nQuestion: %s", q.qname);
 
+    int sock_client = create_client_socket();
+
+    int query_size_a = header_size + question_size;
+    send_dns_query(sock_client, new_query, query_size_a, "8.8.8.8");
+
+    unsigned char answer[512];
+    int recv_b = recv_dns_answer(sock_client, answer);
+
+    printf("RECEBI do servidor publico: %d", recv_b);
  
+
+
+
+
+
+
+
+
+    
      //testando apenas
 
     // unsigned char header[12];

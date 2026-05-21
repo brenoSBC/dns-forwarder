@@ -1,13 +1,24 @@
 #include "../../include/udp_client.h"
 
-void send_dns_query(int sockfd, const unsigned char *buffer, int buffer_size, const char *ip) {
+int create_client_socket() {
+
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    
+    if(sockfd < 0) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+    return sockfd;
+}
+
+void send_dns_query(int sockfd, const unsigned char *buffer, int buffer_size, char *ip) {
 
     struct sockaddr_in server_addr;
 
     memset(&server_addr, 0, sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port   = htons(PORT);
+    server_addr.sin_port   = htons(SERVER_PORT);
     inet_pton(AF_INET, ip, &server_addr.sin_addr);
 
     int send_bytes = sendto(sockfd, buffer, buffer_size, 0, (struct sockaddr *)&server_addr, sizeof(server_addr));
@@ -18,7 +29,7 @@ void send_dns_query(int sockfd, const unsigned char *buffer, int buffer_size, co
     }
 }
 
-int recv_dns_answer(int sockfd, unsigned char *buffer, char *dns_server) {
+int recv_dns_answer(int sockfd, unsigned char *buffer) {
 
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));

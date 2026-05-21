@@ -59,7 +59,11 @@ void dns_header_normalize(DNS_HEADER *h) {
     h->flags.opcode = 0;  
     h->flags.z      = 0;  
     h->flags.rcode  = 0;  
+
     if(h->qdcount == 0) h->qdcount = 1;
+    h->ancount = 0;
+    h->nscount = 0;
+    h->arcount = 0;
 }
 
 
