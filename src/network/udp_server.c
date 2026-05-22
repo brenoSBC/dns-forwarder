@@ -41,3 +41,13 @@ int recv_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct s
     }
     return recv;
 }
+
+int send_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct sockaddr_in *client_addr) {
+
+    int send_bytes = sendto(sockfd, buffer, buffer_size, 0, (struct sockaddr *)client_addr, sizeof(*client_addr));
+
+    if(send_bytes < 0) {
+        perror("sendto");
+        exit(EXIT_FAILURE);
+    }
+}

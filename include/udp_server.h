@@ -9,12 +9,14 @@
 #include <sys/time.h>
 #include <errno.h>
 
-#define PORT 8053
+#define PORT 53
 
 int create_server_socket();
 
 void bind_udp_socket(int sockfd, const char *ip);
 
 int recv_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct sockaddr_in *client_addr);
+
+int send_udp_packet(int sockfd, unsigned char *buffer, int buffer_size, struct sockaddr_in *client_addr);
 
 #endif
